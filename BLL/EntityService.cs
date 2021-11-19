@@ -36,5 +36,6 @@ namespace BLL
         public void ClearCustomFileData() { cstm.ClearDataFile(); }
 
         public bool FileExists() { return bn.FileExists() || xml.FileExists() || json.FileExists() || cstm.FileExists(); }
+        public void DeleteFile() { bn.DeleteFile(); xml.DeleteFile(); json.DeleteFile(); cstm.DeleteFile(); }
     }
 }

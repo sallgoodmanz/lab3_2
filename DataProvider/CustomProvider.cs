@@ -38,5 +38,6 @@ namespace DAL
         }
         public void ClearDataFile() { dataProvider.ClearFileData(); }
         public bool FileExists() { return dataProvider.FileExists(); }
+        public void DeleteFile() { dataProvider.DeleteFile(); }
     }
 }

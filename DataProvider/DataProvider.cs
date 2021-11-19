@@ -38,5 +38,10 @@ namespace DAL
             }
             return false;
         }
+
+        public void DeleteFile()
+        {
+            File.Delete(FilePath);
+        }
     }
 }

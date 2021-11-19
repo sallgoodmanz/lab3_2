@@ -14,10 +14,10 @@ namespace DAL
         {
             Year = default;
         }
-        public Entrepreneur(string name, string surname, int age, int ID, int year, DateTime dateOfBirth)
+        public Entrepreneur(string name, string surname, int age, int ID, int year)//, DateTime dateOfBirth)
              : base(name, surname, age, ID)
         {
-            this.dateOfBirth = dateOfBirth;
+           //this.dateOfBirth = dateOfBirth;
             Year = year;
         }
         public override decimal GetMoney() { return 33000; }
@@ -28,14 +28,14 @@ namespace DAL
         protected Entrepreneur(SerializationInfo info, StreamingContext context)
            : base(info, context)
         {
-            dateOfBirth = info.GetDateTime("BORN_ON");
+           //dateOfBirth = info.GetDateTime("BORN_ON");
             Year = info.GetInt32("WORK_EXPERIENCE");
         }
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
 
-            info.AddValue("BORN_ON", dateOfBirth);
+            //info.AddValue("BORN_ON", dateOfBirth);
             info.AddValue("WORK_EXPERIENCE", Year);
             #endregion
         }

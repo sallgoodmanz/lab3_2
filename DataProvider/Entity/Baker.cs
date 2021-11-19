@@ -14,7 +14,7 @@ namespace DAL
         public Baker(string name, string surname, int age, int ID, DateTime dateOfBirth)
            : base(name, surname, age, ID)
         {
-            this.dateOfBirth = dateOfBirth;
+            this.dateOfBirth = dateOfBirth; 
         }
         public override decimal GetMoney() { return 13000; }
         public override bool CanSkyDive() { return true; }

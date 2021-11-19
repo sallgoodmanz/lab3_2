@@ -12,6 +12,7 @@ namespace DAL
         void ClearFileData();
         bool FileExists();
         bool FileHasData();
+        void DeleteFile();
     }
 
 }

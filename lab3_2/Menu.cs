@@ -71,7 +71,7 @@ namespace lab3_2
             Console.WriteLine("\nName:" + student.Name);
             Console.WriteLine("Surname:" + student.Surname);
             Console.WriteLine("Age:" + student.Age);
-            //  Console.WriteLine("BornOn:" + student.dateOfBirth.ToShortDateString());
+            Console.WriteLine("BornOn:" + student.dateOfBirth.ToShortDateString());
             Console.WriteLine("ID:" + student.ID);
             Console.WriteLine("Year:" + student.Year);
             Console.WriteLine("StudentTicket:" + student.StudentTicket);
@@ -164,6 +164,7 @@ namespace lab3_2
             Console.Write("Місяць: "); string _DATEmonth = Console.ReadLine(); int DATEmonth = int.Parse(_DATEmonth);
             Console.Write("Дата: "); string _DATEday = Console.ReadLine(); int DATEday = int.Parse(_DATEday);
             DateTime dateTime = new DateTime(DATEyear, DATEmonth, DATEday);
+
             Console.Write("ID: "); string _inputID = Console.ReadLine(); int inputID = int.Parse(_inputID);
 
             return new Baker(inputName, inputSurname, inputAge, inputID, dateTime);
@@ -173,15 +174,95 @@ namespace lab3_2
             Console.Write("Ім'я: "); string inputName = Console.ReadLine();
             Console.Write("Прізвище: "); string inputSurname = Console.ReadLine();
             Console.Write("Вік: "); string _inputAge = Console.ReadLine(); int inputAge = int.Parse(_inputAge);
-            Console.WriteLine("Дата народження у форматі ----/--/--");
-            Console.Write("Рік: "); string _DATEyear = Console.ReadLine(); int DATEyear = int.Parse(_DATEyear);
-            Console.Write("Місяць: "); string _DATEmonth = Console.ReadLine(); int DATEmonth = int.Parse(_DATEmonth);
-            Console.Write("Дата: "); string _DATEday = Console.ReadLine(); int DATEday = int.Parse(_DATEday);
-            DateTime dateTime = new DateTime(DATEyear, DATEmonth, DATEday);
+            //Console.WriteLine("Дата народження у форматі ----/--/--");
+            //Console.Write("Рік: "); string _DATEyear = Console.ReadLine(); int DATEyear = int.Parse(_DATEyear);
+            //Console.Write("Місяць: "); string _DATEmonth = Console.ReadLine(); int DATEmonth = int.Parse(_DATEmonth);
+            //Console.Write("Дата: "); string _DATEday = Console.ReadLine(); int DATEday = int.Parse(_DATEday);
+            //DateTime dateTime = new DateTime(DATEyear, DATEmonth, DATEday);
             Console.Write("Досвід роботи: "); string _inputYear = Console.ReadLine(); int inputYear = int.Parse(_inputYear);
             Console.Write("ID: "); string _inputID = Console.ReadLine(); int inputID = int.Parse(_inputID);
 
-            return new Entrepreneur(inputName, inputSurname, inputAge, inputID, inputYear, dateTime);
+            return new Entrepreneur(inputName, inputSurname, inputAge, inputID, inputYear);//, dateTime);
+        }
+
+        private static void GetSpecialStudents()
+        {
+            Console.WriteLine("Введіть назву файлу:"); string inputPath = Console.ReadLine();
+            Console.Clear();
+            EntityService<List<Student>> ESStudents = new EntityService<List<Student>>(inputPath);
+
+            if (ESStudents.FileExists())
+            {
+                try
+                {
+                    switch (SerializationChoice())
+                    {
+                        case 1:
+                            foreach (var student in ESStudents.BinaryDeSerialization())
+                            {
+                                if (student.Year == 4 && (student.dateOfBirth.Month <= 5 && student.dateOfBirth.Month >= 3))
+                                {
+                                    OutputStudent(student);
+                                }
+                            }
+                            break;
+                        case 2:
+                            foreach (var student in ESStudents.XMLDeSerialization())
+                            {
+                                if (student.Year == 4 && (student.dateOfBirth.Month <= 5 && student.dateOfBirth.Month >= 3))
+                                {
+                                    OutputStudent(student);
+                                }
+                            }
+                            break;
+                        case 3:
+                            foreach (var student in ESStudents.JSONDeSerialization())
+                            {
+                                if (student.Year == 4 && (student.dateOfBirth.Month <= 5 && student.dateOfBirth.Month >= 3))
+                                {
+                                    OutputStudent(student);
+                                }
+                            }
+                            break;
+                        case 4:
+                            foreach (var student in ESStudents.CustomDeSerialization())
+                            {
+                                if (student.Year == 4 && (student.dateOfBirth.Month <= 5 && student.dateOfBirth.Month >= 3))
+                                {
+                                    OutputStudent(student);
+                                }
+                            }
+                            break;
+                        default:
+                            Console.Clear();
+                            Console.Write("Перевірте коректність вводу даних!\n\nНатисніть ENTER щоб повернутись до MAIN MENU");
+                            Console.ReadKey();
+                            Console.Clear();
+                            MainMenu();
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.Clear();
+                    Console.WriteLine($@"Exception: {e.Message}");
+                    Console.Write("\nНатисніть ENTER щоб повернутись до MAIN MENU");
+                    Console.ReadKey();
+                    Console.Clear();
+                    MainMenu();
+                }
+                finally { Console.ReadKey(); Console.Clear(); }
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Exception: Заданий файл не існує");
+                Console.Write("\nНатисніть ENTER щоб повернутись до MAIN MENU");
+                Console.ReadKey();
+                Console.Clear();
+                MainMenu();
+            }
+
         }
         #endregion
 
@@ -423,9 +504,10 @@ namespace lab3_2
                 {
                     Console.WriteLine("\t\tDELETE MENU");
                     Console.WriteLine("-----------------------------------------");
-                    Console.WriteLine("1 - Видалити БД");
-                    Console.WriteLine("2 - Повернутись до MAIN MENU");
-                    Console.WriteLine("3 - Закінчити роботу");
+                    Console.WriteLine("1 - Видалити дані з БД");
+                    Console.WriteLine("2 - Видалити БД");
+                    Console.WriteLine("3 - Повернутись до MAIN MENU");
+                    Console.WriteLine("4 - Закінчити роботу");
                     Console.WriteLine("-----------------------------------------");
 
                     string str = Console.ReadLine();
@@ -438,27 +520,60 @@ namespace lab3_2
                                 Console.WriteLine("Введіть назву файлу:"); string inputPath = Console.ReadLine();
                                 EntityService<List<object>> ES = new EntityService<List<object>>(inputPath);
                                 Console.Clear();
-                                switch (SerializationChoice())
+                                if (ES.FileExists())
                                 {
-                                    case 1: ES.ClearBinFileData(); break;
-                                    case 2: ES.ClearXMLFileData(); break;
-                                    case 3: ES.ClearJSONFileData(); break;
-                                    case 4: ES.ClearCustomFileData(); break;
-                                    default:
-                                        Console.WriteLine("Некоректне введення даних!\n\nНатисніть ENTER щоб повернутись до DELETE MENU");
-                                        Console.ReadKey();
-                                        Console.Clear();
-                                        break;
+                                    switch (SerializationChoice())
+                                    {
+                                        case 1: ES.ClearBinFileData(); break;
+                                        case 2: ES.ClearXMLFileData(); break;
+                                        case 3: ES.ClearJSONFileData(); break;
+                                        case 4: ES.ClearCustomFileData(); break;
+                                        default:
+                                            Console.WriteLine("Некоректне введення даних!\n\nНатисніть ENTER щоб повернутись до DELETE MENU");
+                                            Console.ReadKey();
+                                            Console.Clear();
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Exception: Заданий файл не існує");
+                                    Console.Write("\nНатисніть ENTER щоб повернутись до DELETE MENU");
+                                    Console.ReadKey();
+                                    Console.Clear();
+                                    DeleteMenu();
                                 }
                                 break;
                             }
                         case 2:
                             {
                                 Console.Clear();
-                                MainMenu();
+                                Console.WriteLine("Введіть назву файлу:"); string inputPath = Console.ReadLine();
+                                EntityService<List<object>> ES = new EntityService<List<object>>(inputPath);
+                                Console.Clear();
+                                if (ES.FileExists())
+                                {
+                                    ES.DeleteFile();
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Exception: Заданий файл не існує");
+                                    Console.Write("\nНатисніть ENTER щоб повернутись до DELETE MENU");
+                                    Console.ReadKey();
+                                    Console.Clear();
+                                    DeleteMenu();
+                                }
                                 break;
                             }
                         case 3:
+                            {
+                                Console.Clear();
+                                MainMenu();
+                                break;
+                            }
+                        case 4:
                             {
                                 Console.Clear();
                                 Environment.Exit(0);
@@ -719,85 +834,7 @@ namespace lab3_2
                 MainMenu();
             }
         }
-        private static void GetSpecialStudents()
-        {
-            Console.WriteLine("Введіть назву файлу:"); string inputPath = Console.ReadLine();
-            Console.Clear();
-            EntityService<List<Student>> ESStudents = new EntityService<List<Student>>(inputPath);
-
-            if (ESStudents.FileExists())
-            {
-                try
-                {
-                    switch (SerializationChoice())
-                    {
-                        case 1:
-                            foreach (var student in ESStudents.BinaryDeSerialization())
-                            {
-                                if (student.Year == 4 && (student.dateOfBirth.Month <= 5 && student.dateOfBirth.Month >= 3))
-                                {
-                                    OutputStudent(student);
-                                }
-                            }
-                            break;
-                        case 2:
-                            foreach (var student in ESStudents.XMLDeSerialization())
-                            {
-                                if (student.Year == 4 && (student.dateOfBirth.Month <= 11 && student.dateOfBirth.Month >= 9))
-                                {
-                                    OutputStudent(student);
-                                }
-                            }
-                            break;
-                        case 3:
-                            foreach (var student in ESStudents.JSONDeSerialization())
-                            {
-                                if (student.Year == 4 && (student.dateOfBirth.Month <= 11 && student.dateOfBirth.Month >= 9))
-                                {
-                                    OutputStudent(student);
-                                }
-                            }
-                            break;
-                        case 4:
-                            foreach (var student in ESStudents.CustomDeSerialization())
-                            {
-                                if (student.Year == 4 && (student.dateOfBirth.Month <= 11 && student.dateOfBirth.Month >= 9))
-                                {
-                                    OutputStudent(student);
-                                }
-                            }
-                            break;
-                        default:
-                            Console.Clear();
-                            Console.Write("Перевірте коректність вводу даних!\n\nНатисніть ENTER щоб повернутись до MAIN MENU");
-                            Console.ReadKey();
-                            Console.Clear();
-                            MainMenu();
-                            break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.Clear();
-                    Console.WriteLine($@"Exception: {e.Message}");
-                    Console.Write("\nНатисніть ENTER щоб повернутись до MAIN MENU");
-                    Console.ReadKey();
-                    Console.Clear();
-                    MainMenu();
-                }
-                finally { Console.ReadKey(); Console.Clear(); }
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("Exception: Заданий файл не існує");
-                Console.Write("\nНатисніть ENTER щоб повернутись до MAIN MENU");
-                Console.ReadKey();
-                Console.Clear();
-                MainMenu();
-            }
-
-        }
+      
         #endregion
     }
 }
